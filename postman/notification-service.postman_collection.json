@@ -1,0 +1,73 @@
+{
+  "info": {
+    "name": "notification-service",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [{ "key": "base", "value": "http://localhost:8080" }],
+  "item": [
+    {
+      "name": "health",
+      "request": { "method": "GET", "url": "{{base}}/health" }
+    },
+    {
+      "name": "send welcome (200)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{base}}/notifications",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"channel\": \"whatsapp\",\n  \"recipient\": \"+77001234567\",\n  \"template\": \"welcome\",\n  \"params\": { \"name\": \"Айдар\", \"service\": \"Beeline\" }\n}"
+        }
+      }
+    },
+    {
+      "name": "send order_status (200)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{base}}/notifications",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"channel\": \"sms\",\n  \"recipient\": \"+77001234567\",\n  \"template\": \"order_status\",\n  \"params\": { \"orderId\": \"1042\", \"status\": \"shipped\" }\n}"
+        }
+      }
+    },
+    {
+      "name": "unknown channel (400)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{base}}/notifications",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"channel\": \"fax\",\n  \"recipient\": \"x\",\n  \"template\": \"welcome\"\n}"
+        }
+      }
+    },
+    {
+      "name": "missing template param (422)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{base}}/notifications",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"channel\": \"sms\",\n  \"recipient\": \"x\",\n  \"template\": \"welcome\",\n  \"params\": { \"name\": \"Айдар\" }\n}"
+        }
+      }
+    },
+    {
+      "name": "path in template name (400)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{base}}/notifications",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"channel\": \"sms\",\n  \"recipient\": \"x\",\n  \"template\": \"../secret\"\n}"
+        }
+      }
+    }
+  ]
+}
